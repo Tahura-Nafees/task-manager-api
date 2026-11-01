@@ -36,7 +36,12 @@ import { TasksModule } from './tasks/tasks.module';
           sync: { alter: !isProd }, // never alter existing tables in production
           dialectOptions:
             config.get<string>('DB_SSL') === 'true'
-              ? { ssl: { rejectUnauthorized: true } }
+              ? {
+                  ssl: {
+                    ca: config.get<string>('DB_CA')?.replace(/\\n/g, '\n'),
+                    rejectUnauthorized: true,
+                  },
+                }
               : {},
         };
       },
